@@ -11,3 +11,13 @@ CREATE TABLE IF NOT EXISTS events (
   INDEX idx_ip_ts (ip, ts),
   INDEX idx_type_ts (type, ts)
 );
+CREATE TABLE IF NOT EXISTS alerts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  rule VARCHAR(64) NOT NULL,
+  ip VARCHAR(45) NOT NULL,
+  count INT NOT NULL,
+  first_seen DATETIME(3) NOT NULL,
+  last_seen DATETIME(3) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_rule_ip_last (rule, ip, last_seen)
+);
