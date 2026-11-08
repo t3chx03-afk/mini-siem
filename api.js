@@ -43,7 +43,42 @@ app.get('/api/alerts', async (req, res) => {
   }
 });
 
-// TODO (desafio): GET /api/stats/top-ips
+// Top 10 IPs com mais tentativas falhadas
+app.get('/api/stats/top-ips', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `SELECT ip, COUNT(*) AS tentativas
+       FROM events
+       WHERE type = 'invalid_user'
+       GROUP BY ip
+       ORDER BY tentativas DESC
+       LIMIT 10`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error('[api]', err);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+});
+// Resumo para os indicadores do topo
+app.get('/api/stats/summary', async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT
+        (SELECT COUNT(*) FROM events) AS total_events,
+        (SELECT COUNT(*) FROM events
+           WHERE type = 'invalid_user' AND ts >= NOW() - INTERVAL 24 HOUR) AS failed_24h,
+        (SELECT COUNT(*) FROM alerts
+           WHERE last_seen >= NOW() - INTERVAL 24 HOUR) AS alerts_24h,
+        (SELECT COUNT(DISTINCT ip) FROM events
+           WHERE type = 'invalid_user') AS unique_ips
+    `);
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('[api]', err);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`API a correr na porta ${PORT}`);
