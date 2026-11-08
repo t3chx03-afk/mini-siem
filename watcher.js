@@ -2,8 +2,7 @@ const { spawn } = require('child_process');
 const readline = require('readline');
 const { parseLine } = require('./parser');
 const { insertEvent } = require('./db');
-const { checkBruteForce } = require('./detector');
-const { sendTelegram } = require('./notifier');
+const { runRules } = require('./detector');const { sendTelegram } = require('./notifier');
 const LOG_FILE = '/var/log/auth.log';
 
 // Segue o ficheiro e entrega as linhas novas ao Node
@@ -23,19 +22,18 @@ rl.on('line', async (line) => {
 
   try {
     await insertEvent(event);
-    const alert = await checkBruteForce(event);
-    if (alert) {
-        console.log(`!!! ALERTA ${alert.rule}: ${alert.ip} fez ${alert.count} tentativas em 60s`);
+    const alerts = await runRules(event);
+    for (const alert of alerts) {
+      console.log(`!!! ALERTA [${alert.severity}] ${alert.rule}: ${alert.ip} (${alert.count} falhas)`);
 
-        await sendTelegram(
-        `ALERTA: ${alert.rule}\n` +
+      await sendTelegram(
+        `ALERTA ${alert.severity}: ${alert.rule}\n` +
         `Servidor: ${event.host}\n` +
         `IP: ${alert.ip}\n` +
-        `Tentativas: ${alert.count} em 60s\n` +
+        `Falhas antes: ${alert.count}\n` +
+        (event.type === 'login_success' ? `Login como: ${event.user}\n` : '') +
         `Hora: ${event.timestamp.slice(11, 19)} UTC`
-        );
-
-        
+      );
     }
   } catch (err) {
     console.error('[db] Erro ao gravar:', err.message);
