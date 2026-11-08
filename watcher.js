@@ -3,6 +3,7 @@ const readline = require('readline');
 const { parseLine } = require('./parser');
 const { insertEvent } = require('./db');
 const { checkBruteForce } = require('./detector');
+const { sendTelegram } = require('./notifier');
 const LOG_FILE = '/var/log/auth.log';
 
 // Segue o ficheiro e entrega as linhas novas ao Node
@@ -25,6 +26,16 @@ rl.on('line', async (line) => {
     const alert = await checkBruteForce(event);
     if (alert) {
         console.log(`!!! ALERTA ${alert.rule}: ${alert.ip} fez ${alert.count} tentativas em 60s`);
+
+        await sendTelegram(
+        `ALERTA: ${alert.rule}\n` +
+        `Servidor: ${event.host}\n` +
+        `IP: ${alert.ip}\n` +
+        `Tentativas: ${alert.count} em 60s\n` +
+        `Hora: ${event.timestamp.slice(11, 19)} UTC`
+        );
+
+        
     }
   } catch (err) {
     console.error('[db] Erro ao gravar:', err.message);
