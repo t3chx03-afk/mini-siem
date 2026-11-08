@@ -25,9 +25,9 @@ async function countFailures(ip, ts, windowSeconds) {
 
 async function createAlert(rule, severity, ip, count, firstSeen, ts) {
   await pool.execute(
-    `INSERT INTO alerts (rule, ip, count, first_seen, last_seen)
-     VALUES (?, ?, ?, ?, ?)`,
-    [rule, ip, count, firstSeen ?? ts, ts]
+    `INSERT INTO alerts (rule, severity, ip, count, first_seen, last_seen)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [rule, severity, ip, count, firstSeen ?? ts, ts]
   );
   return { rule, severity, ip, count };
 }
@@ -55,7 +55,7 @@ async function checkSuccessAfterFailures(event) {
   if (total < 3) return null;
   if (await inCooldown(rule, event.ip, ts)) return null;
 
-  return createAlert(rule, 'CRITICA', event.ip, total, first_seen, ts);
+  return createAlert(rule, 'critica', event.ip, total, first_seen, ts);
 }
 
 // Corre todas as regras e devolve os alertas gerados

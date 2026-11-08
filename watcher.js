@@ -24,10 +24,10 @@ rl.on('line', async (line) => {
     await insertEvent(event);
     const alerts = await runRules(event);
     for (const alert of alerts) {
-      console.log(`!!! ALERTA [${alert.severity}] ${alert.rule}: ${alert.ip} (${alert.count} falhas)`);
+      console.log(`!!! ALERTA [${alert.severity.toUpperCase()}] ${alert.rule}: ${alert.ip} (${alert.count} falhas)`);
 
       await sendTelegram(
-        `ALERTA ${alert.severity}: ${alert.rule}\n` +
+        `ALERTA ${alert.severity.toUpperCase()}: ${alert.rule}\n` +
         `Servidor: ${event.host}\n` +
         `IP: ${alert.ip}\n` +
         `Falhas antes: ${alert.count}\n` +

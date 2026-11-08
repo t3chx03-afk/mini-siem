@@ -108,11 +108,12 @@ export default function App() {
             ) : (
               <table>
                 <thead>
-                  <tr><th>Quando</th><th>IP</th><th>Tent.</th></tr>
+                  <tr><th>Sev.</th><th>Quando</th><th>IP</th><th>Tent.</th></tr>
                 </thead>
                 <tbody>
                   {alerts.map((al) => (
-                    <tr key={al.id} className="alert-row" title={al.rule}>
+                    <tr key={al.id} className={`alert-row ${al.severity}`} title={al.rule}>
+                      <td><span className={`badge sev-${al.severity}`}>{al.severity}</span></td>
                       <td>{formatDateTime(al.last_seen)}</td>
                       <td>{al.ip}</td>
                       <td>{al.count}</td>

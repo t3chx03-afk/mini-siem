@@ -88,7 +88,15 @@ tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
 .badge.invalid_user { color: var(--red); }
 .badge.login_success { color: var(--green); }
 
-.alert-row td:first-child { border-left: 3px solid var(--red); }
+.alert-row td:first-child { border-left: 3px solid var(--amber); }
+.alert-row.critica td:first-child { border-left-color: var(--red); }
+
+.badge.sev-alta { color: var(--amber); }
+.badge.sev-critica {
+  color: var(--red);
+  background: rgba(229, 72, 77, 0.15);
+  font-weight: 600;
+}
 
 .bar-cell { width: 100%; }
 .bar {

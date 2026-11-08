@@ -33,7 +33,7 @@ app.get('/api/alerts', async (req, res) => {
   try {
     const limit = parseLimit(req.query.limit);
     const [rows] = await pool.query(
-      `SELECT id, rule, ip, count, first_seen, last_seen
+      `SELECT id, rule, severity, ip, count, first_seen, last_seen
        FROM alerts ORDER BY last_seen DESC LIMIT ?`,
       [limit]
     );
