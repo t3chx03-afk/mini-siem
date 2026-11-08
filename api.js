@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const { pool } = require('./db');
 
@@ -79,6 +80,9 @@ app.get('/api/stats/summary', async (req, res) => {
     res.status(500).json({ error: 'Erro interno' });
   }
 });
+
+// Serve o painel compilado (dashboard/dist)
+app.use(express.static(path.join(__dirname, 'dashboard', 'dist')));
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`API a correr na porta ${PORT}`);
