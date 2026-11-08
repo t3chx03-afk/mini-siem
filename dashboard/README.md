@@ -1,16 +1,20 @@
-# React + Vite
+# Mini-SIEM
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma frase sobre o que é e para que serve.
 
-Currently, two official plugins are available:
+![Painel](docs/painel.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Funcionalidades
+- (o que deteta, como alerta, o que mostra)
 
-## React Compiler
+## Arquitetura
+auth.log → watcher (Node.js) → MySQL → regras de deteção → Telegram
+                                      → API (Express) → painel (React)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Decisões de segurança
+- (SQL injection, XSS, menor privilégio, segredos, firewall, Docker ligado a 127.0.0.1...)
 
-## Expanding the ESLint configuration
+## Como instalar
+(passos: clonar, .env, docker compose, npm install, build, systemd)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## O que aprendi / próximos passos

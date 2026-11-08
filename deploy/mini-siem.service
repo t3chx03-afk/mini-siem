@@ -1,0 +1,15 @@
+[Unit]
+Description=Mini-SIEM watcher
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=juniorst
+WorkingDirectory=/home/juniorst/mini-siem
+ExecStart=/usr/bin/node watcher.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
