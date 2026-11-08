@@ -34,6 +34,7 @@ body {
   display: inline-block; width: 8px; height: 8px; margin-right: 6px;
   border-radius: 50%; background: var(--green);
 }
+.dot.stale { background: var(--amber); }
 .dot.off { background: var(--red); }
 
 .error {

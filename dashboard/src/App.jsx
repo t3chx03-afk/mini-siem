@@ -11,7 +11,15 @@ export default function App() {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
   const [updatedAt, setUpdatedAt] = useState(null);
+  const [now, setNow] = useState(new Date());
 
+  // Relógio: atualiza a cada segundo
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Dados: vai buscar à API a cada 5 segundos
   useEffect(() => {
     async function load() {
       try {
@@ -43,6 +51,8 @@ export default function App() {
     return () => clearInterval(id);
   }, []);
 
+  const secondsAgo = updatedAt ? Math.floor((now - updatedAt) / 1000) : null;
+  const stale = secondsAgo !== null && secondsAgo > 15;
   const maxAttempts = Math.max(1, ...topIps.map((t) => t.tentativas));
 
   return (
@@ -50,8 +60,9 @@ export default function App() {
       <header className="header">
         <h1>Mini-SIEM · macmini</h1>
         <span className="status">
-          <span className={error ? 'dot off' : 'dot'} />
-          {updatedAt ? `atualizado às ${formatTime(updatedAt)}` : 'a carregar...'}
+          <span className={error ? 'dot off' : stale ? 'dot stale' : 'dot'} />
+          {formatTime(now)}
+          {secondsAgo !== null ? ` · dados de há ${secondsAgo}s` : ' · a carregar...'}
         </span>
       </header>
 
