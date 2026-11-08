@@ -84,6 +84,10 @@ app.get('/api/stats/summary', async (req, res) => {
 // Serve o painel compilado (dashboard/dist)
 app.use(express.static(path.join(__dirname, 'dashboard', 'dist')));
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', (err) => {
+  if (err) {
+    console.error(`[api] Não foi possível usar a porta ${PORT}:`, err.message);
+    process.exit(1);
+  }
   console.log(`API a correr na porta ${PORT}`);
 });
